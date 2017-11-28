@@ -73,6 +73,51 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
         }
 
         [Fact]
+        public async Task BuffersRequestBody_UsingDefaultOptions()
+        {
+            // Arrange
+            var content = "{name: 'Person Name', Age: '30'}";
+            var logger = GetLogger();
+            var formatter =
+                new JsonInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider, new MvcOptions());
+            var contentBytes = Encoding.UTF8.GetBytes(content);
+
+            var modelState = new ModelStateDictionary();
+            var httpContext = new DefaultHttpContext();
+            httpContext.Features.Set<IHttpResponseFeature>(new TestResponseFeature());
+            httpContext.Request.Body = new NonSeekableReadStream(contentBytes);
+            httpContext.Request.ContentType = "application/json";
+            var provider = new EmptyModelMetadataProvider();
+            var metadata = provider.GetMetadataForType(typeof(User));
+            var context = new InputFormatterContext(
+                httpContext,
+                modelName: string.Empty,
+                modelState: modelState,
+                metadata: metadata,
+                readerFactory: new TestHttpRequestStreamReaderFactory().CreateReader);
+
+            // Act
+            var result = await formatter.ReadAsync(context);
+
+            // Assert
+            Assert.False(result.HasError);
+            var userModel = Assert.IsType<User>(result.Model);
+            Assert.Equal("Person Name", userModel.Name);
+            Assert.Equal(30, userModel.Age);
+
+            Assert.True(httpContext.Request.Body.CanSeek);
+            httpContext.Request.Body.Seek(0L, SeekOrigin.Begin);
+
+            result = await formatter.ReadAsync(context);
+
+            // Assert
+            Assert.False(result.HasError);
+            userModel = Assert.IsType<User>(result.Model);
+            Assert.Equal("Person Name", userModel.Name);
+            Assert.Equal(30, userModel.Age);
+        }
+
+        [Fact]
         public async Task SuppressInputFormatterBufferingSetToTrue_DoesNotBufferRequestBody()
         {
             // Arrange
@@ -105,7 +150,95 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
             Assert.Equal("Person Name", userModel.Name);
             Assert.Equal(30, userModel.Age);
 
-            // Reading again should not fail as the request body should have been buffered by the formatter
+            Assert.False(httpContext.Request.Body.CanSeek);
+            result = await formatter.ReadAsync(context);
+
+            // Assert
+            Assert.False(result.HasError);
+            Assert.Null(result.Model);
+        }
+
+        [Fact]
+        public async Task SuppressInputFormatterBufferingSetToTrue_UsingMvcOptions_DoesNotBufferRequestBody()
+        {
+            // Arrange
+            var content = "{name: 'Person Name', Age: '30'}";
+            var logger = GetLogger();
+            var mvcOptions = new MvcOptions();
+            mvcOptions.SuppressInputFormatterBuffering = true;
+            var formatter =
+                new JsonInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider, mvcOptions);
+            var contentBytes = Encoding.UTF8.GetBytes(content);
+
+            var modelState = new ModelStateDictionary();
+            var httpContext = new DefaultHttpContext();
+            httpContext.Features.Set<IHttpResponseFeature>(new TestResponseFeature());
+            httpContext.Request.Body = new NonSeekableReadStream(contentBytes);
+            httpContext.Request.ContentType = "application/json";
+            var provider = new EmptyModelMetadataProvider();
+            var metadata = provider.GetMetadataForType(typeof(User));
+            var context = new InputFormatterContext(
+                httpContext,
+                modelName: string.Empty,
+                modelState: modelState,
+                metadata: metadata,
+                readerFactory: new TestHttpRequestStreamReaderFactory().CreateReader);
+
+            // Act
+            var result = await formatter.ReadAsync(context);
+
+            // Assert
+            Assert.False(result.HasError);
+            var userModel = Assert.IsType<User>(result.Model);
+            Assert.Equal("Person Name", userModel.Name);
+            Assert.Equal(30, userModel.Age);
+
+            Assert.False(httpContext.Request.Body.CanSeek);
+            result = await formatter.ReadAsync(context);
+
+            // Assert
+            Assert.False(result.HasError);
+            Assert.Null(result.Model);
+        }
+
+        [Fact]
+        public async Task SuppressInputFormatterBufferingSetToTrue_UsingMutatedOptions()
+        {
+            // Arrange
+            var content = "{name: 'Person Name', Age: '30'}";
+            var logger = GetLogger();
+            var mvcOptions = new MvcOptions();
+            mvcOptions.SuppressInputFormatterBuffering = false;
+            var formatter =
+                new JsonInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider, mvcOptions);
+            // Mutate options after passing into the constructor to make sure that the value type is not store in the constructor
+            mvcOptions.SuppressInputFormatterBuffering = true;
+            var contentBytes = Encoding.UTF8.GetBytes(content);
+
+            var modelState = new ModelStateDictionary();
+            var httpContext = new DefaultHttpContext();
+            httpContext.Features.Set<IHttpResponseFeature>(new TestResponseFeature());
+            httpContext.Request.Body = new NonSeekableReadStream(contentBytes);
+            httpContext.Request.ContentType = "application/json";
+            var provider = new EmptyModelMetadataProvider();
+            var metadata = provider.GetMetadataForType(typeof(User));
+            var context = new InputFormatterContext(
+                httpContext,
+                modelName: string.Empty,
+                modelState: modelState,
+                metadata: metadata,
+                readerFactory: new TestHttpRequestStreamReaderFactory().CreateReader);
+
+            // Act
+            var result = await formatter.ReadAsync(context);
+
+            // Assert
+            Assert.False(result.HasError);
+            var userModel = Assert.IsType<User>(result.Model);
+            Assert.Equal("Person Name", userModel.Name);
+            Assert.Equal(30, userModel.Age);
+
+            Assert.False(httpContext.Request.Body.CanSeek);
             result = await formatter.ReadAsync(context);
 
             // Assert

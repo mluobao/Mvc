@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>$(StandardTestTfms)</TargetFrameworks>
     <PreserveCompilationContext>true</PreserveCompilationContext>
+    <NoWarn>$(NoWarn);CS0618</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
