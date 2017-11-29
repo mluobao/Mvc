@@ -28,8 +28,8 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
         private readonly ILogger _logger;
         private readonly ObjectPoolProvider _objectPoolProvider;
         private readonly MvcOptions _options;
-        private readonly bool? _suppressInputFormatterBuffering;
-        private readonly bool? _suppressJsonDeserializationExceptionMessages;
+        private readonly bool _suppressInputFormatterBuffering;
+        private readonly bool _suppressJsonDeserializationExceptionMessages;
 
         private ObjectPool<JsonSerializer> _jsonSerializerPool;
 
@@ -229,7 +229,7 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
 
             var request = context.HttpContext.Request;
 
-            var suppressInputFormatterBuffering = _suppressInputFormatterBuffering ?? _options.SuppressInputFormatterBuffering;
+            var suppressInputFormatterBuffering = _options?.SuppressInputFormatterBuffering ?? _suppressInputFormatterBuffering;
 
             if (!request.Body.CanSeek && !suppressInputFormatterBuffering)
             {
@@ -411,7 +411,7 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
             // we regard as having safe messages to expose to clients
             var isJsonExceptionType =
                 exception is JsonReaderException || exception is JsonSerializationException;
-            var suppressJsonDeserializationExceptionMessages = _suppressJsonDeserializationExceptionMessages ?? _options.SuppressJsonDeserializationExceptionMessagesInModelState;
+            var suppressJsonDeserializationExceptionMessages = _options?.SuppressJsonDeserializationExceptionMessagesInModelState ?? _suppressJsonDeserializationExceptionMessages;
             var suppressOriginalMessage =
                 suppressJsonDeserializationExceptionMessages || !isJsonExceptionType;
             return suppressOriginalMessage

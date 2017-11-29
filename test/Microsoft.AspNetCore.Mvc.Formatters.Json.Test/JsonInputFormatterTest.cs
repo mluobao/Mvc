@@ -78,8 +78,12 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
             // Arrange
             var content = "{name: 'Person Name', Age: '30'}";
             var logger = GetLogger();
-            var formatter =
-                new JsonInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider, new MvcOptions());
+            var formatter = new JsonInputFormatter(
+                logger,
+                _serializerSettings,
+                ArrayPool<char>.Shared,
+                _objectPoolProvider,
+                new MvcOptions());
             var contentBytes = Encoding.UTF8.GetBytes(content);
 
             var modelState = new ModelStateDictionary();
@@ -166,8 +170,12 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
             var logger = GetLogger();
             var mvcOptions = new MvcOptions();
             mvcOptions.SuppressInputFormatterBuffering = true;
-            var formatter =
-                new JsonInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider, mvcOptions);
+            var formatter = new JsonInputFormatter(
+                logger,
+                _serializerSettings,
+                ArrayPool<char>.Shared,
+                _objectPoolProvider,
+                mvcOptions);
             var contentBytes = Encoding.UTF8.GetBytes(content);
 
             var modelState = new ModelStateDictionary();
@@ -209,10 +217,8 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
             var logger = GetLogger();
             var mvcOptions = new MvcOptions();
             mvcOptions.SuppressInputFormatterBuffering = false;
-            var formatter =
+            var formatter = 
                 new JsonInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider, mvcOptions);
-            // Mutate options after passing into the constructor to make sure that the value type is not store in the constructor
-            mvcOptions.SuppressInputFormatterBuffering = true;
             var contentBytes = Encoding.UTF8.GetBytes(content);
 
             var modelState = new ModelStateDictionary();
@@ -230,6 +236,8 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
                 readerFactory: new TestHttpRequestStreamReaderFactory().CreateReader);
 
             // Act
+            // Mutate options after passing into the constructor to make sure that the value type is not store in the constructor
+            mvcOptions.SuppressInputFormatterBuffering = true;
             var result = await formatter.ReadAsync(context);
 
             // Assert
@@ -268,7 +276,7 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
             var loggerMock = GetLogger();
 
             var formatter =
-                new JsonInputFormatter(loggerMock, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider);
+                new JsonInputFormatter(loggerMock, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider, new MvcOptions());
             var contentBytes = Encoding.UTF8.GetBytes("content");
 
             var httpContext = GetHttpContext(contentBytes, contentType: requestContentType);
@@ -294,7 +302,7 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
             // Arrange
             var loggerMock = GetLogger();
             var formatter =
-                new JsonInputFormatter(loggerMock, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider);
+                new JsonInputFormatter(loggerMock, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider, new MvcOptions());
 
             // Act
             var mediaType = formatter.SupportedMediaTypes[0];
@@ -321,7 +329,7 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
             // Arrange
             var logger = GetLogger();
             var formatter =
-                new JsonInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider);
+                new JsonInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider, new MvcOptions());
             var contentBytes = Encoding.UTF8.GetBytes(content);
 
             var httpContext = GetHttpContext(contentBytes);
@@ -349,7 +357,7 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
             var content = "{name: 'Person Name', Age: '30'}";
             var logger = GetLogger();
             var formatter =
-                new JsonInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider);
+                new JsonInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider, new MvcOptions());
             var contentBytes = Encoding.UTF8.GetBytes(content);
 
             var httpContext = GetHttpContext(contentBytes);
@@ -379,7 +387,7 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
             var content = "[0, 23, 300]";
             var logger = GetLogger();
             var formatter =
-                new JsonInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider);
+                new JsonInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider, new MvcOptions());
             var contentBytes = Encoding.UTF8.GetBytes(content);
 
             var modelState = new ModelStateDictionary();
@@ -413,7 +421,7 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
             var content = "[0, 23, 300]";
             var logger = GetLogger();
             var formatter =
-                new JsonInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider);
+                new JsonInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider, new MvcOptions());
             var contentBytes = Encoding.UTF8.GetBytes(content);
 
             var modelState = new ModelStateDictionary();
@@ -443,7 +451,7 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
             var content = "{name: 'Person Name', Age: 'not-an-age'}";
             var logger = GetLogger();
             var formatter =
-                new JsonInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider);
+                new JsonInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider, new MvcOptions());
             var contentBytes = Encoding.UTF8.GetBytes(content);
 
             var modelState = new ModelStateDictionary();
@@ -474,7 +482,7 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
             var content = "[0, 23, 300]";
             var logger = GetLogger();
             var formatter =
-                new JsonInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider);
+                new JsonInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider, new MvcOptions());
             var contentBytes = Encoding.UTF8.GetBytes(content);
 
             var modelState = new ModelStateDictionary();
@@ -504,7 +512,7 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
             var content = "[{name: 'Name One', Age: 30}, {name: 'Name Two', Small: 300}]";
             var logger = GetLogger();
             var formatter =
-                new JsonInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider);
+                new JsonInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider, new MvcOptions());
             var contentBytes = Encoding.UTF8.GetBytes(content);
 
             var modelState = new ModelStateDictionary();
@@ -535,7 +543,7 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
             var content = "{name: 'Person Name', Age: 'not-an-age'}";
             var logger = GetLogger();
             var formatter =
-                new JsonInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider);
+                new JsonInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider, new MvcOptions());
             var contentBytes = Encoding.UTF8.GetBytes(content);
 
             var modelState = new ModelStateDictionary();
@@ -573,7 +581,7 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
             // Arrange
             var logger = GetLogger();
             var formatter =
-                new JsonInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider);
+                new JsonInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider, new MvcOptions());
             var contentBytes = Encoding.UTF8.GetBytes(content);
 
             var modelState = new ModelStateDictionary();
@@ -621,7 +629,7 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
             // by default we ignore missing members, so here explicitly changing it
             var serializerSettings = new JsonSerializerSettings { MissingMemberHandling = MissingMemberHandling.Error };
             var jsonFormatter =
-                new JsonInputFormatter(logger, serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider);
+                new JsonInputFormatter(logger, serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider, new MvcOptions());
 
             var modelState = new ModelStateDictionary();
             var httpContext = GetHttpContext(contentBytes, "application/json;charset=utf-8");
@@ -680,7 +688,7 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
             // Arrange
             var logger = GetLogger();
             var formatter =
-                new JsonInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider);
+                new JsonInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider, new MvcOptions());
             var contentBytes = Encoding.UTF8.GetBytes(content);
 
             var modelState = new ModelStateDictionary();
@@ -712,8 +720,15 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
             // Arrange
             var logger = GetLogger();
             var formatter = new JsonInputFormatter(
-                logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider,
-                suppressInputFormatterBuffering: false, suppressJsonDeserializationExceptionMessages: true);
+                logger,
+                _serializerSettings,
+                ArrayPool<char>.Shared,
+                _objectPoolProvider,
+                new MvcOptions()
+                {
+                    SuppressInputFormatterBuffering = false,
+                    SuppressJsonDeserializationExceptionMessagesInModelState = true
+                });
             var contentBytes = Encoding.UTF8.GetBytes("{");
             var modelStateKey = string.Empty;
 

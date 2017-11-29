@@ -168,10 +168,12 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
             var logger = GetLogger();
             var mvcOptions = new MvcOptions();
             mvcOptions.SuppressInputFormatterBuffering = false;
-            var formatter =
-                new JsonPatchInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider, mvcOptions);
-            // Mutate options after passing into the constructor to make sure that the value type is not store in the constructor
-            mvcOptions.SuppressInputFormatterBuffering = true;
+            var formatter = new JsonPatchInputFormatter(
+                logger,
+                _serializerSettings,
+                ArrayPool<char>.Shared,
+                _objectPoolProvider,
+                mvcOptions);
             var content = "[{\"op\":\"add\",\"path\":\"Customer/Name\",\"value\":\"John\"}]";
             var contentBytes = Encoding.UTF8.GetBytes(content);
 
@@ -190,6 +192,8 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
                 readerFactory: new TestHttpRequestStreamReaderFactory().CreateReader);
 
             // Act
+            // Mutate options after passing into the constructor to make sure that the value type is not store in the constructor
+            mvcOptions.SuppressInputFormatterBuffering = true;
             var result = await formatter.ReadAsync(context);
 
             // Assert
@@ -213,7 +217,7 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
             // Arrange
             var logger = GetLogger();
             var formatter =
-                new JsonPatchInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider);
+                new JsonPatchInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider, new MvcOptions());
             var content = "[{\"op\":\"add\",\"path\":\"Customer/Name\",\"value\":\"John\"}]";
             var contentBytes = Encoding.UTF8.GetBytes(content);
 
@@ -245,7 +249,7 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
             // Arrange
             var logger = GetLogger();
             var formatter =
-                new JsonPatchInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider);
+                new JsonPatchInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider, new MvcOptions());
             var content = "[{\"op\": \"add\", \"path\" : \"Customer/Name\", \"value\":\"John\"}," +
                 "{\"op\": \"remove\", \"path\" : \"Customer/Name\"}]";
             var contentBytes = Encoding.UTF8.GetBytes(content);
@@ -284,7 +288,7 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
             // Arrange
             var logger = GetLogger();
             var formatter =
-                new JsonPatchInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider);
+                new JsonPatchInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider, new MvcOptions());
             var content = "[{\"op\": \"add\", \"path\" : \"Customer/Name\", \"value\":\"John\"}]";
             var contentBytes = Encoding.UTF8.GetBytes(content);
 
@@ -314,7 +318,7 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
             // Arrange
             var logger = GetLogger();
             var formatter =
-                new JsonPatchInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider);
+                new JsonPatchInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider, new MvcOptions());
             var content = "[{\"op\": \"add\", \"path\" : \"Customer/Name\", \"value\":\"John\"}]";
             var contentBytes = Encoding.UTF8.GetBytes(content);
 
@@ -345,7 +349,7 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
 
             var logger = GetLogger();
             var formatter =
-                new JsonPatchInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider);
+                new JsonPatchInputFormatter(logger, _serializerSettings, ArrayPool<char>.Shared, _objectPoolProvider, new MvcOptions());
             var content = "[{\"op\": \"add\", \"path\" : \"Customer/Name\", \"value\":\"John\"}]";
             var contentBytes = Encoding.UTF8.GetBytes(content);
 

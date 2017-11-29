@@ -19,7 +19,6 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
     /// </summary>
     public class JsonPatchInputFormatter : JsonInputFormatter
     {
-
         /// <summary>
         /// Initializes a new <see cref="JsonPatchInputFormatter"/> instance.
         /// </summary>
