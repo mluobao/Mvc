@@ -25,6 +25,7 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
         private static readonly ObjectPoolProvider _objectPoolProvider = new DefaultObjectPoolProvider();
         private static readonly JsonSerializerSettings _serializerSettings = new JsonSerializerSettings();
 
+#pragma warning disable CS0618
         [Fact]
         public async Task BuffersRequestBody_ByDefault()
         {
@@ -71,6 +72,7 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
             Assert.Equal("Customer/Name", patchDoc.Operations[0].path);
             Assert.Equal("John", patchDoc.Operations[0].value);
         }
+#pragma warning restore CS0618
 
         [Fact]
         public async Task BuffersRequestBody_UsingDefaultOptions()
@@ -119,6 +121,7 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
             Assert.Equal("John", patchDoc.Operations[0].value);
         }
 
+#pragma warning disable CS0618
         [Fact]
         public async Task SuppressInputFormatterBufferingSetToTrue_DoesNotBufferRequestBody()
         {
@@ -160,6 +163,7 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
             Assert.False(result.HasError);
             Assert.Null(result.Model);
         }
+#pragma warning restore CS0618
 
         [Fact]
         public async Task SuppressInputFormatterBufferingSetToTrue_UsingMutatedOptions_DoesNotBufferRequestBody()

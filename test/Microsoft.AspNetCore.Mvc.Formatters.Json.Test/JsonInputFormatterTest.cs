@@ -27,6 +27,7 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
         private static readonly ObjectPoolProvider _objectPoolProvider = new DefaultObjectPoolProvider();
         private static readonly JsonSerializerSettings _serializerSettings = new JsonSerializerSettings();
 
+#pragma warning disable CS0618
         [Fact]
         public async Task BuffersRequestBody_ByDefault()
         {
@@ -71,6 +72,7 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
             Assert.Equal("Person Name", userModel.Name);
             Assert.Equal(30, userModel.Age);
         }
+#pragma warning restore CS0618
 
         [Fact]
         public async Task BuffersRequestBody_UsingDefaultOptions()
@@ -121,6 +123,7 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
             Assert.Equal(30, userModel.Age);
         }
 
+#pragma warning disable CS0618
         [Fact]
         public async Task SuppressInputFormatterBufferingSetToTrue_DoesNotBufferRequestBody()
         {
@@ -161,6 +164,7 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
             Assert.False(result.HasError);
             Assert.Null(result.Model);
         }
+#pragma warning restore CS0618
 
         [Fact]
         public async Task SuppressInputFormatterBufferingSetToTrue_UsingMvcOptions_DoesNotBufferRequestBody()
@@ -759,7 +763,7 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
         private class TestableJsonInputFormatter : JsonInputFormatter
         {
             public TestableJsonInputFormatter(JsonSerializerSettings settings)
-                : base(GetLogger(), settings, ArrayPool<char>.Shared, _objectPoolProvider)
+                : base(GetLogger(), settings, ArrayPool<char>.Shared, _objectPoolProvider, new MvcOptions())
             {
             }
 

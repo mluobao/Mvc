@@ -282,7 +282,10 @@ namespace Microsoft.AspNetCore.Mvc.ModelBinding
                     { modelName, valueProviderValue }
                 }
             };
-            var binderProvider = new EnumTypeModelBinderProvider(new TestMvcOptions(allowBindingUndefinedValueToEnumType).Value);
+            var binderProvider = new EnumTypeModelBinderProvider(new MvcOptions
+            {
+                AllowBindingUndefinedValueToEnumType = allowBindingUndefinedValueToEnumType
+            });
             var binder = binderProvider.GetBinder(binderProviderContext);
             return (bindingContext, binder);
         }
@@ -312,25 +315,6 @@ namespace Microsoft.AspNetCore.Mvc.ModelBinding
             Value1 = 1,
             Value2 = 2,
             MaxValue = int.MaxValue
-        }
-
-        private class TestMvcOptions : IOptions<MvcOptions>
-        {
-            private readonly MvcOptions _options;
-
-            public TestMvcOptions(bool allowBindingUndefinedValueToEnumType)
-            {
-                _options = new MvcOptions();
-                _options.AllowBindingUndefinedValueToEnumType = allowBindingUndefinedValueToEnumType;
-            }
-
-            public MvcOptions Value
-            {
-                get
-                {
-                    return _options;
-                }
-            }
         }
     }
 }
