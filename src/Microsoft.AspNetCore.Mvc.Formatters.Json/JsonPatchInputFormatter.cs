@@ -104,7 +104,7 @@ namespace Microsoft.AspNetCore.Mvc.Formatters
         /// </param>
         /// <param name="charPool">The <see cref="ArrayPool{Char}"/>.</param>
         /// <param name="objectPoolProvider">The <see cref="ObjectPoolProvider"/>.</param>
-        /// <param name="options"></param>
+        /// <param name="options">The <see cref="MvcOptions"/>.</param>
         public JsonPatchInputFormatter(
             ILogger logger,
             JsonSerializerSettings serializerSettings,
