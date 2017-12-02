@@ -115,15 +115,17 @@ namespace Microsoft.AspNetCore.Mvc.ViewFeatures.Internal
             // Arrange
             var provider = new TempDataApplicationModelProvider();
             var defaultProvider = new DefaultApplicationModelProvider(Options.Create(new MvcOptions()));
-            var type = typeof(TestController_NullableNonPrimitiveTempDataProperty);
-            var context = new ApplicationModelProviderContext(new[] { type.GetTypeInfo() });
+            var controllerType = typeof(TestController_NullableNonPrimitiveTempDataProperty);
+            var context = new ApplicationModelProviderContext(new[] { controllerType.GetTypeInfo() });
             defaultProvider.OnProvidersExecuting(context);
 
             // Act & Assert
             var exception = Assert.Throws<InvalidOperationException>(() =>
                 provider.OnProvidersExecuting(context));
 
-            Assert.Equal($"The '{type.FullName}.{nameof(TestController_NullableNonPrimitiveTempDataProperty.Car)}' property with {nameof(TempDataAttribute)} is invalid. A property using {nameof(TempDataAttribute)} must be of primitive or string type.", exception.Message);
+            Assert.Equal($"The '{controllerType.FullName}.{nameof(TestController_NullableNonPrimitiveTempDataProperty.Car)}'"
+                + $" property with {nameof(TempDataAttribute)} is invalid. A property using {nameof(TempDataAttribute)} "
+                + $"must be of primitive or string type.", exception.Message);
         }
 
         public class TestController_NullableNonPrimitiveTempDataProperty
